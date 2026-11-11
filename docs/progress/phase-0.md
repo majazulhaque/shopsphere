@@ -26,8 +26,8 @@ Execution mode: **Option B**. Commands run by the developer on the MacBook; outp
 | 0.7 | Java 21, Maven Wrapper, Node 24 pinning | ✅ done | `./mvnw -v` → Maven 3.9.16 on Temurin 21.0.13; `validate` BUILD SUCCESS; `mvnw` mode 100755 | `b581c04` |
 | 0.8 | Config Server skeleton | ✅ done | `./mvnw verify` green (ConfigServerIT 2/2: health UP, native backend serves config-repo); `spring-boot:run` started in 0.93 s, health UP, RSS 158 MB | `bf2a48b` |
 | 0.9 | Docker Desktop resource limits (§17.2) | 🔄 open | Done: Docker Desktop CLI in use (client = engine 28.1.1), compose v2.35.1, `hello-world` OK, built-in Kubernetes off, other project's containers stopped (VM used 2,165 → 461 MB), build cache −804 MB. **Pending:** CPU 6 / memory 2.75 GB / swap 1 GB / Resource Saver (still 8 CPU / 3.83 GiB); Docker Desktop update | — |
-| 0.10 | Git hooks + gitleaks | ✅ done | `core.hooksPath=.githooks`; pre-commit blocked a staged RSA private key; commit-msg blocked a non-conventional message and passed a valid one | this task's commit |
-| 0.11 | Seed ADRs (ADR-001…038) | ⏳ | | |
+| 0.10 | Git hooks + gitleaks | ✅ done | `core.hooksPath=.githooks`; pre-commit blocked a staged RSA private key; commit-msg blocked a non-conventional message and passed a valid one | `959560b` |
+| 0.11 | Seed ADRs (ADR-001…038) | ✅ done | 38 ADRs + index in `docs/adr/` (Status · Context · Decision · Alternatives · Consequences), 39 files SHA-256 verified; pinned versions recorded in ADR-003/004/005 | this task's commit |
 | 0.12 | CI pipeline with disk guard (§22) | ⏳ | | |
 | 0.13 | Public-repo security baseline (§23) | ⏳ | | |
 | 0.14 | README + runbooks | ⏳ | | |
