@@ -1,4 +1,3 @@
-cat > .gitignore <<'EOF'
 # ---------- OS / editors ----------
 .DS_Store
 .idea/
@@ -36,4 +35,3 @@ next-env.d.ts
 .testcontainers.properties
 kubeconfig*
 .bin/
-EOF
