@@ -24,9 +24,9 @@ Execution mode: **Option B**. Commands run by the developer on the MacBook; outp
 | 0.5 | Monorepo directory structure (§12) | ✅ done | 38 directories, structure SHA-256 verified; progress log started | `0b0100d` |
 | 0.6 | Maven parent POM (Boot 4.1, Spring Cloud BOM, Enforcer) | ✅ done (see D-P0-6) | Enforcer: Java, Maven, duplicate versions, banned app-to-app dependencies, all passed | `3cf51ec` |
 | 0.7 | Java 21, Maven Wrapper, Node 24 pinning | ✅ done | `./mvnw -v` → Maven 3.9.16 on Temurin 21.0.13; `validate` BUILD SUCCESS; `mvnw` mode 100755 | `b581c04` |
-| 0.8 | Config Server skeleton | ✅ done | `./mvnw verify` green (ConfigServerIT: health UP, native backend serves config-repo); `spring-boot:run` → `/actuator/health` UP | this task's commit |
-| 0.9 | Docker Desktop resource limits (§17.2) | ⏳ | | |
-| 0.10 | Git hooks + gitleaks | ⏳ | | |
+| 0.8 | Config Server skeleton | ✅ done | `./mvnw verify` green (ConfigServerIT 2/2: health UP, native backend serves config-repo); `spring-boot:run` started in 0.93 s, health UP, RSS 158 MB | `bf2a48b` |
+| 0.9 | Docker Desktop resource limits (§17.2) | 🔄 open | Done: Docker Desktop CLI in use (client = engine 28.1.1), compose v2.35.1, `hello-world` OK, built-in Kubernetes off, other project's containers stopped (VM used 2,165 → 461 MB), build cache −804 MB. **Pending:** CPU 6 / memory 2.75 GB / swap 1 GB / Resource Saver (still 8 CPU / 3.83 GiB); Docker Desktop update | — |
+| 0.10 | Git hooks + gitleaks | ✅ done | `core.hooksPath=.githooks`; pre-commit blocked a staged RSA private key; commit-msg blocked a non-conventional message and passed a valid one | this task's commit |
 | 0.11 | Seed ADRs (ADR-001…038) | ⏳ | | |
 | 0.12 | CI pipeline with disk guard (§22) | ⏳ | | |
 | 0.13 | Public-repo security baseline (§23) | ⏳ | | |
@@ -42,7 +42,9 @@ Execution mode: **Option B**. Commands run by the developer on the MacBook; outp
 | D-P0-1 | Free disk 31–34 GB, below the 40 GB minimum (§21.5) | Enough for Phase 0; not enough for Phase 1 infrastructure images | **Hard gate:** ≥ 40 GB free before Phase 1, Day 2 |
 | D-P0-2 | Swap heavily used at first check (12.4 GB) | Would distort the memory baseline | Developer resolving; re-checked in Task 0.17 |
 | D-P0-3 | kubectl client 1.37 vs approved cluster 1.35 (outside ±1 skew) | None until Phase 9 | Phase 9 uses a project-local kubectl 1.35 binary; approved K8s version unchanged |
-| D-P0-4 | Docker Desktop memory ≈ 4.1 GB; Homebrew `docker` CLI 27.3.1 shadows Docker Desktop's CLI | Exceeds §17.2 budget | Fixed in Task 0.9 |
+| D-P0-4 | Docker Desktop memory ≈ 4.1 GB; Homebrew `docker` CLI 27.3.1 shadows Docker Desktop's CLI | Exceeds §17.2 budget | CLI part fixed (`brew unlink docker`); resource limits pending in Task 0.9, **must be applied before Task 0.17** |
 | D-P0-5 | First commit captured heredoc wrapper lines inside the three hygiene files | `.gitattributes` invalid; gitleaks scan did not run | Fixed in `a96c1bb` (SHA-256 verified); scan re-run: 2 commits, no leaks |
 | D-P0-6 | Parent POM (`3cf51ec`) was committed and pushed before Maven validated it (wrapper download had failed in a zsh paste) | Brief window where an unvalidated POM was on `main` | Validated after commit: `./mvnw validate` BUILD SUCCESS, all Enforcer rules passed; no fix needed. Process fix: no comment lines in paste blocks; `setopt interactivecomments` enabled |
 | D-P0-7 | Maven Wrapper zip verified with SHA-1 only (Maven Central publishes no SHA-512 for it) | Low: the wrapper scripts are small, reviewed and committed; Maven itself is verified with SHA-256 on every run | Accepted |
+| D-P0-8 | Blueprint §12 lists `.pre-commit-config.yaml` (pre-commit framework); native git hooks in `.githooks/` are used instead | None: same control (gitleaks on staged changes) without a Python toolchain dependency on the 8 GB machine | Accepted; CI runs gitleaks on the full history regardless of local hooks (Task 0.12) |
+| D-P0-9 | Commit summaries before Task 0.10 (`3cf51ec`, `b581c04`, `bf2a48b`) exceed the 72-character limit of §13.12 | Cosmetic; history is not rewritten | `commit-msg` hook enforces the limit from Task 0.10 onwards |

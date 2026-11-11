@@ -1,0 +1,14 @@
+#!/bin/sh
+# ShopSphere pre-commit hook (Blueprint v1.1.1 §23.3): block commits that contain secrets.
+# Enabled per clone with: git config core.hooksPath .githooks
+
+if ! command -v gitleaks >/dev/null 2>&1; then
+  echo "pre-commit: gitleaks is not installed (brew install gitleaks). Commit blocked." >&2
+  exit 1
+fi
+
+if ! gitleaks git --pre-commit --staged --redact --no-banner --config .gitleaks.toml .; then
+  echo "pre-commit: gitleaks found a potential secret in the staged changes. Commit blocked." >&2
+  echo "Move the value to .env (local) or GitHub Secrets (CI) and try again." >&2
+  exit 1
+fi

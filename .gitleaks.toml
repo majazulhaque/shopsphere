@@ -1,0 +1,7 @@
+# ShopSphere gitleaks configuration (Blueprint v1.1.1 §23.3, §23.6).
+# Uses gitleaks' built-in rule set. Allow-list entries need a written justification
+# in the same commit and a review; never allow-list a real credential.
+title = "ShopSphere"
+
+[extend]
+useDefault = true

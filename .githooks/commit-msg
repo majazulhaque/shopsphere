@@ -1,0 +1,21 @@
+#!/bin/sh
+# ShopSphere commit-msg hook (Blueprint v1.1.1 §13.12): enforce Conventional Commits.
+# Format: type(scope): summary   (summary line at most 72 characters)
+
+FIRST_LINE=$(head -n 1 "$1")
+
+case "$FIRST_LINE" in
+  Merge\ *|Revert\ *|fixup!\ *|squash!\ *) exit 0 ;;
+esac
+
+TYPES='feat|fix|refactor|test|docs|build|ci|chore|perf'
+if ! printf '%s\n' "$FIRST_LINE" | grep -Eq "^($TYPES)(\([a-z0-9-]+\))?!?: [^ ].*$"; then
+  echo "commit-msg: '$FIRST_LINE'" >&2
+  echo "commit-msg: must look like 'type(scope): summary' with type one of: $TYPES" >&2
+  exit 1
+fi
+
+if [ "${#FIRST_LINE}" -gt 72 ]; then
+  echo "commit-msg: summary line is ${#FIRST_LINE} characters; the limit is 72 (Blueprint §13.12)." >&2
+  exit 1
+fi
