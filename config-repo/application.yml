@@ -1,0 +1,8 @@
+# Shared defaults for every ShopSphere service, served by config-server (Blueprint §12, §13.6).
+# Service-specific files (<service-name>.yml) override these values.
+# Never put secrets here: values come from environment variables (§23.1).
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info

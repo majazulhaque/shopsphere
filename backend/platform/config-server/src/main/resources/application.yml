@@ -1,0 +1,26 @@
+server:
+  port: 8888
+
+spring:
+  application:
+    name: config-server
+  profiles:
+    # "native" = serve plain files from a directory instead of a Git remote (ADR-033, §17.7)
+    active: native
+  cloud:
+    config:
+      server:
+        native:
+          # Default: config-repo/ at the monorepo root, relative to this module's directory.
+          # Docker / Kubernetes override it with SHOPSPHERE_CONFIG_REPO_LOCATION.
+          search-locations: ${SHOPSPHERE_CONFIG_REPO_LOCATION:file:../../../config-repo/}
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+  endpoint:
+    health:
+      probes:
+        enabled: true

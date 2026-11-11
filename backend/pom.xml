@@ -20,7 +20,8 @@
     <description>Parent POM for all ShopSphere backend modules (Blueprint v1.1.1; ADR-002, ADR-003, ADR-004, ADR-005).</description>
 
     <modules>
-        <!-- Modules are added as they are created. config-server arrives in Task 0.8. -->
+        <!-- Platform -->
+        <module>platform/config-server</module>
     </modules>
 
     <properties>
