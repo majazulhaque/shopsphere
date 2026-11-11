@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <!-- ADR-004: Spring Boot 4.1.x (patch pinned at Phase 0 start) -->
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>4.1.2</version>
+        <relativePath/>
+    </parent>
+
+    <groupId>com.shopsphere</groupId>
+    <artifactId>shopsphere-parent</artifactId>
+    <version>1.0.0-SNAPSHOT</version>
+    <packaging>pom</packaging>
+    <name>ShopSphere :: Parent</name>
+    <description>Parent POM for all ShopSphere backend modules (Blueprint v1.1.1; ADR-002, ADR-003, ADR-004, ADR-005).</description>
+
+    <modules>
+        <!-- Modules are added as they are created. config-server arrives in Task 0.8. -->
+    </modules>
+
+    <properties>
+        <!-- ADR-003: Java 21 LTS -->
+        <java.version>21</java.version>
+        <!-- ADR-004: Spring Cloud 2025.1.x (compatible with Spring Boot 4.1) -->
+        <spring-cloud.version>2025.1.4</spring-cloud.version>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <!-- Blueprint §17.6: small serial-GC test JVMs for the 8 GB development machine -->
+        <argLine>-Xmx384m -XX:+UseSerialGC</argLine>
+    </properties>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-dependencies</artifactId>
+                <version>${spring-cloud.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+    <build>
+        <pluginManagement>
+            <plugins>
+                <!-- Blueprint §17.6: one test fork at a time on the 8 GB machine -->
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-surefire-plugin</artifactId>
+                    <configuration>
+                        <forkCount>1</forkCount>
+                        <reuseForks>true</reuseForks>
+                    </configuration>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-enforcer-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>enforce-shopsphere-rules</id>
+                        <goals>
+                            <goal>enforce</goal>
+                        </goals>
+                        <configuration>
+                            <rules>
+                                <requireJavaVersion>
+                                    <version>[21,22)</version>
+                                    <message>ShopSphere builds with Java 21 LTS (ADR-003).</message>
+                                </requireJavaVersion>
+                                <requireMavenVersion>
+                                    <version>[3.9.0,)</version>
+                                    <message>Use the Maven Wrapper (./mvnw) from the backend directory.</message>
+                                </requireMavenVersion>
+                                <banDuplicatePomDependencyVersions/>
+                                <bannedDependencies>
+                                    <!-- ADR-002: applications never depend on each other; share code only via backend/libs -->
+                                    <excludes>
+                                        <exclude>com.shopsphere:config-server</exclude>
+                                        <exclude>com.shopsphere:discovery-server</exclude>
+                                        <exclude>com.shopsphere:api-gateway</exclude>
+                                        <exclude>com.shopsphere:catalog-service</exclude>
+                                        <exclude>com.shopsphere:inventory-service</exclude>
+                                        <exclude>com.shopsphere:order-service</exclude>
+                                        <exclude>com.shopsphere:payment-service</exclude>
+                                        <exclude>com.shopsphere:shipping-service</exclude>
+                                        <exclude>com.shopsphere:review-service</exclude>
+                                        <exclude>com.shopsphere:recommendation-service</exclude>
+                                    </excludes>
+                                    <message>Services and platform applications must never depend on each other (ADR-002).</message>
+                                </bannedDependencies>
+                            </rules>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+</project>
